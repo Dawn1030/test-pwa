@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SwPush } from '@angular/service-worker';
-import { Sw } from 'src/app/shared/sw';
+import { PushSW } from 'src/app/sw/PushSW';
 
 @Component({
   selector: 'app-push',
@@ -11,20 +10,20 @@ export class PushComponent implements OnInit {
   isPushFirst = false;
   isPushStopB = false;
 
-  constructor(private swPush: SwPush, private sw: Sw) { }
+  constructor(private pushSW: PushSW) { }
 
   ngOnInit() {
-    this.sw.requestPermission();
+    this.pushSW.requestPermission();
   }
 
   push() {
     this.isPushFirst = true;
-    this.sw.displayNotification();
+    this.pushSW.displayNotification();
   }
 
   pushStopB() {
     this.isPushStopB = true;
-    this.sw.displayNotification({
+    this.pushSW.displayNotification({
       body: '訊息如圖',
       image: './assets/img/stopLittleB.png'
     });
