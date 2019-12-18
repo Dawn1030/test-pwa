@@ -1,8 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
-
+@import 'assets/scss/_variables';
 
 @import 'assets/scss/base/_reset';
 @import 'assets/scss/base/_base';
 
 
-@import 'assets/scss/_variables';
+@import 'assets/scss/component/page';
