@@ -23,7 +23,14 @@ ng add @angular/pwa
 npm i -g http-server
 ```
 
-## 3 app-shell
+## 3 運行PWA
+在指令列輸入
+```
+npm run-script build-prod
+npm start
+```
+
+## 4 app-shell
 1.  顯示核心介面 or loading畫面
 
 2. `感知效能 > 實際效能` => 提高使用者體驗
@@ -33,11 +40,11 @@ npm i -g http-server
 4. [這篇](https://ithelp.ithome.com.tw/articles/10186865)提供概念
 > 後續的載入、PWA 只要重新獲取變動的資料，而不是整個頁面的內容都重新下載，藉由 service worker cache App Shell 針對速度做提升
 
-##### 3.1 實作筆記(過程參照官方即可)
+##### 4.1 實作筆記(過程參照官方即可)
 * `app-shell.component` => 核心介面 or loading畫面
 * `app.server.module.ts` => 預設 import Module (達到上方第4點效果)
 
-## 4 通知
+## 5 通知
 * 要求權限
 ``` js
 navigator.serviceWorker.ready
