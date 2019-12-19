@@ -2,6 +2,8 @@
   <h1 class="title">Home</h1>
   <hr class="title-line">
   <mat-action-list>
-    <button class="menu-item" mat-list-item (click)="goPage('/test/push')">Push</button>
+    <button class="menu-item" *ngFor="let menu of menuList"
+      mat-list-item
+      (click)="goPage(menu.url)">{{ menu.name}}</button>
   </mat-action-list>
 </div>

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { PushSW } from 'src/app/sw/PushSW';
+import { PushSW } from 'src/app/core/sw/PushSW';
 
 @Component({
   selector: 'app-push',
@@ -7,9 +7,6 @@ import { PushSW } from 'src/app/sw/PushSW';
   styleUrls: ['./push.component.scss']
 })
 export class PushComponent implements OnInit {
-  isPushFirst = false;
-  isPushStopB = false;
-
   constructor(private pushSW: PushSW) { }
 
   ngOnInit() {
@@ -17,16 +14,7 @@ export class PushComponent implements OnInit {
   }
 
   push() {
-    this.isPushFirst = true;
     this.pushSW.displayNotification();
-  }
-
-  pushStopB() {
-    this.isPushStopB = true;
-    this.pushSW.displayNotification({
-      body: '訊息如圖',
-      image: './assets/img/stopLittleB.png'
-    });
   }
 
 }

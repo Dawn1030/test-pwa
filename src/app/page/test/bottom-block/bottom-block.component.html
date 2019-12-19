@@ -1,0 +1,11 @@
+<div class="bottom-block">
+  <form [formGroup]="form">
+    <mat-form-field class="field">
+      <input matInput placeholder="項目" formControlName="name">
+    </mat-form-field>
+    <mat-form-field class="field">
+      <input matInput placeholder="金額" formControlName="amount">
+    </mat-form-field>
+  </form>
+  <button mat-flat-button class="btn" (click)="save()">save</button>
+</div>

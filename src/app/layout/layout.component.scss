@@ -3,10 +3,19 @@
   flex-direction: column;
   height: 100%;
   background-color: #cde0c9;
+  & > .btn-back {
+    font-size: 0.9rem;
+    color: #3d998a;
+    background: none;
+    position: fixed;
+    top: 5px;
+    left: 10px;
+  }
   & > .main {
     background-color: #edecde;
     border-radius: 20px 20px 0px 0px;
-    margin: 25px 10px 0px;
+    margin: 35px 10px 0px;
     height: 100%;
+    overflow: auto;
   }
 }

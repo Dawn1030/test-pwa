@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Menu } from 'src/app/core/interface';
 
 @Component({
   selector: 'app-home',
@@ -7,6 +8,10 @@ import { Router } from '@angular/router';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
+  menuList: Array<Menu> = [
+    { name: 'IndexedDB', url: '/test/indexeddb'},
+    { name: 'Push', url: '/test/push'},
+  ];
 
   constructor(private router: Router) { }
 

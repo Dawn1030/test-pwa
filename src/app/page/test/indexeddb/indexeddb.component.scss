@@ -1,0 +1,27 @@
+.btn-new {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  font-size: 1rem;
+}
+
+.table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.8rem;
+  th, td {
+    padding: 8px;
+    text-align: left;
+  }
+  th {
+    border-bottom: 2px solid #c7c7c7;
+  }
+
+  td {
+    border-bottom: 1px solid #c7c7c7;
+  }
+
+  tr:hover {
+    background-color: #deddd0;
+  }
+}

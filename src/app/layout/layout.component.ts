@@ -11,4 +11,7 @@ export class LayoutComponent implements OnInit {
   ngOnInit() {
   }
 
+  goBack(): void {
+    window.history.back();
+  }
 }

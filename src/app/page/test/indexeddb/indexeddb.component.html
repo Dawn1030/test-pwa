@@ -1,0 +1,18 @@
+<div class="page">
+  <h1 class="title">IndexedDB</h1>
+  <hr class="title-line">
+  <button class="btn-new" mat-fab color="primary" (click)="openBottomBlock()">+</button>
+  <table class="table">
+    <tr>
+      <th>sn</th>
+      <th>項目</th>
+      <th>金額 (元)</th>
+    </tr>
+    <tr *ngFor="let item of bookkeepingList; let idx = index">
+      <td>{{idx}}</td>
+      <td>{{item.name}}</td>
+      <td>{{item.amount}}</td>
+    </tr>
+  </table>
+</div>
+
