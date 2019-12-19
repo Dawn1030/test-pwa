@@ -1,31 +1,52 @@
-<<<<<<< HEAD
-# TestPwa
+# Study of PWA in Angular
+------
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.3.20.
+## 1 參考
 
-## Development server
+* [IT邦鐵人賽-1](https://ithelp.ithome.com.tw/users/20103808/ironman/1389)
+* [IT邦鐵人賽-2](https://ithelp.ithome.com.tw/users/20071512/ironman/1222)
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+**service-worker**
+* [Angular官方](https://angular.io/guide/service-worker-getting-started)
+* [MDN](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/serviceWorker)
 
-## Code scaffolding
+**app-shell**
+* [Angular官方](https://angular.io/guide/app-shell)
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## 2 安裝
+```
+ng add @angular/pwa
+npm i -g http-server
+```
 
-## Build
+## 3 app-shell
+1.  顯示核心介面 or loading畫面
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+2. `感知效能 > 實際效能` => 提高使用者體驗
 
-## Running unit tests
+3. [這篇](https://ithelp.ithome.com.tw/articles/10186865)提供概念
+> 後續的載入、PWA 只要重新獲取變動的資料，而不是整個頁面的內容都重新下載，藉由 service worker cache App Shell 針對速度做提升
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+##### 3.1 實作筆記(過程參照官方即可)
+* `app-shell.component` => 核心介面 or loading畫面
+* `app.server.module.ts` => 預設 import Module (達到上方第3點效果)
 
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
-=======
-# test-pwa
->>>>>>> f55eee87c51adada673e31a8438510b217a16979
+## 4 通知
+* 要求權限
+``` js
+navigator.serviceWorker.ready
+  .then(reg => {
+    Notification.requestPermission(status => {
+      /* status: permission status */
+    });
+  })
+```
+* 跳通知
+``` js
+  navigator.serviceWorker.getRegistration(reg => {
+    const opt = { /* 通知設定 */ };
+    reg.showNotification('test', opt);
+  })
+```
+* 可以獨立於網頁去執行 => 只要js就能跳通知
+* 只有localhost和https才能跳
