@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { SearchOption } from 'src/app/core/interface';
 
 export const enum OBJ {
   BOOKKEEPING = 'Bookkeeping'
@@ -20,14 +21,24 @@ export class IndexedDB {
   constructor() {
   }
 
-  readBookkeeping(): Observable<Array<any>> {
+  readBookkeeping(opts?: Array<SearchOption>): Observable<Array<any>> {
     return this.handle(OBJ.BOOKKEEPING, TX_MODE.READ, (obs, db, store) => {
       const resultList = [];
       const req = store.openCursor();
       req.onsuccess = (event) => {
         const cursor = event.target.result;
         if (cursor) {
-          resultList.push({ key: cursor.key, ...cursor.value });
+          if (opts) {
+            opts.some(opt => {
+              const isMatch = cursor.value[opt.field].indexOf(opt.searchData) !== -1;
+              if (isMatch) {
+                resultList.push({ key: cursor.key, ...cursor.value });
+              }
+              return isMatch;
+            });
+          } else {
+            resultList.push({ key: cursor.key, ...cursor.value });
+          }
           cursor.continue();
         } else {
           obs.next(resultList);

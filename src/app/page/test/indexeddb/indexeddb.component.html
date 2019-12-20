@@ -2,6 +2,14 @@
   <h1 class="title">IndexedDB</h1>
   <hr class="title-line">
   <button class="btn-new" mat-fab color="primary" (click)="openBottomBlock()">+</button>
+  <div class="search-block">
+    <form [formGroup]="form">
+      <mat-form-field>
+        <input matInput placeholder="項目" formControlName="name">
+      </mat-form-field>
+      <button mat-flat-button class="btn" (click)="readBookkeeping()">search</button>
+    </form>
+  </div>
   <table class="table">
     <tr>
       <th>action</th>
