@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { MatBottomSheetRef } from '@angular/material/bottom-sheet';
+import { Component, OnInit, Inject } from '@angular/core';
+import { MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material/bottom-sheet';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { IndexedDB } from 'src/app/core/sw/IndexedDb';
 
@@ -14,11 +14,16 @@ export class BottomBlockComponent implements OnInit {
   constructor(
     private bottomSheetRef: MatBottomSheetRef<BottomBlockComponent>,
     private fb: FormBuilder,
-    private db: IndexedDB
-  ) { }
+    private db: IndexedDB,
+    @Inject(MAT_BOTTOM_SHEET_DATA) public data: any
+  ) {
+  }
 
   ngOnInit() {
     this.buildForm();
+    if (this.data) {
+      this.form.patchValue(this.data);
+    }
   }
 
   buildForm() {
@@ -28,14 +33,25 @@ export class BottomBlockComponent implements OnInit {
     });
   }
 
-  save() {
-    this.db.addBookkeeping(this.form.value).subscribe(res => {
-      if (res) {
-        alert('Saved successfully');
-      } else {
-        alert('Save failed');
-      }
-      this.bottomSheetRef.dismiss(res);
-    });
+  save(key) {
+    if (!key) {
+      this.db.addBookkeeping(this.form.value).subscribe(res => {
+        if (res) {
+          alert('Add successfully');
+        } else {
+          alert('Add failed');
+        }
+        this.bottomSheetRef.dismiss(res);
+      });
+    } else {
+      this.db.updateBookkeeping(key, this.form.value).subscribe(res => {
+        if (res) {
+          alert('Update successfully');
+        } else {
+          alert('Update failed');
+        }
+        this.bottomSheetRef.dismiss(res);
+      });
+    }
   }
 }

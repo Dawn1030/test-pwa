@@ -6,11 +6,12 @@
     <tr>
       <th>action</th>
       <th>項目</th>
-      <th>金額 (元)</th>
+      <th>金額</th>
     </tr>
     <tr *ngFor="let item of bookkeepingList">
       <td>
-        <button mat-mini-fab color="white">edit</button>
+        <button mat-mini-fab color="white"
+          (click)="openBottomBlock(item)">edit</button>
         <button mat-mini-fab color="primary" style="margin-left: 5px;"
           (click)="deleteBookkeeping(item.key)">delete</button>
       </td>

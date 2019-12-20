@@ -51,6 +51,28 @@ export class IndexedDB {
     });
   }
 
+  updateBookkeeping(key, data): Observable<boolean> {
+    return this.handle(OBJ.BOOKKEEPING, TX_MODE.READandWRITE, (obs, db, store) => {
+      let req = store.get(key);
+      req.onsuccess = (evt) => {
+        const record = evt.target.result;
+        if (!record) {
+          obs.next(false);
+          db.close();
+          obs.complete();
+          console.log(`[${OBJ.BOOKKEEPING}-key: ${key}] no data`);
+        }
+        req = store.put(data, key);
+        req.onsuccess = () => {
+          obs.next(true);
+          db.close();
+          obs.complete();
+        };
+      };
+      return req;
+    });
+  }
+
   delBookkeeping(key): Observable<boolean> {
     return this.handle(OBJ.BOOKKEEPING, TX_MODE.READandWRITE, (obs, db, store) => {
       let req = store.get(key);

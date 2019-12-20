@@ -24,8 +24,8 @@ export class IndexeddbComponent implements OnInit, AfterViewInit {
     // this.readBookkeeping();
   }
 
-  openBottomBlock(): void {
-    this.bottomSheet.open(BottomBlockComponent)
+  openBottomBlock(item = null): void {
+    this.bottomSheet.open(BottomBlockComponent, { data: item})
       .afterDismissed().subscribe(res => {
         if (res) {
           this.readBookkeeping();
