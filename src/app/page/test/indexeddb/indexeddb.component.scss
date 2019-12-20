@@ -11,17 +11,14 @@
   font-size: 0.8rem;
   th, td {
     padding: 8px;
-    text-align: left;
   }
   th {
+    text-align: center;
     border-bottom: 2px solid #c7c7c7;
   }
 
   td {
+    text-align: left;
     border-bottom: 1px solid #c7c7c7;
-  }
-
-  tr:hover {
-    background-color: #deddd0;
   }
 }

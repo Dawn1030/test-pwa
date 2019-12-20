@@ -33,6 +33,17 @@ export class IndexeddbComponent implements OnInit, AfterViewInit {
       });
   }
 
+  deleteBookkeeping(key) {
+    this.db.delBookkeeping(key).subscribe(res => {
+      if (res) {
+        alert('Delete successfully');
+        this.readBookkeeping();
+      } else {
+        alert('Delete failed');
+      }
+    });
+  }
+
   readBookkeeping() {
     this.db.readBookkeeping().subscribe(res => {
       console.log(res);

@@ -11,11 +11,6 @@ export const enum TX_MODE {
   READandWRITE = 'readwrite'
 }
 
-export enum MODIFY_MODE {
-  ADD = 'Add',
-  DELETE = 'Delete'
-}
-
 @Injectable({
   providedIn: 'root'
 })
@@ -26,64 +21,72 @@ export class IndexedDB {
   }
 
   readBookkeeping(): Observable<Array<any>> {
-    return this.getAllHandle(OBJ.BOOKKEEPING);
+    return this.handle(OBJ.BOOKKEEPING, TX_MODE.READ, (obs, db, store) => {
+      const resultList = [];
+      const req = store.openCursor();
+      req.onsuccess = (event) => {
+        const cursor = event.target.result;
+        if (cursor) {
+          resultList.push({ key: cursor.key, ...cursor.value });
+          cursor.continue();
+        } else {
+          obs.next(resultList);
+          db.close();
+          obs.complete();
+        }
+      };
+      return req;
+    });
   }
 
   addBookkeeping(data): Observable<boolean> {
-    return this.modifyHandle(OBJ.BOOKKEEPING, MODIFY_MODE.ADD, data);
+    return this.handle(OBJ.BOOKKEEPING, TX_MODE.READandWRITE, (obs, db, store) => {
+      const req = store.add(data);
+      req.onsuccess = () => {
+        obs.next(true);
+        db.close();
+        obs.complete();
+      };
+      return req;
+    });
   }
 
-  /** 編輯obj資料共用處理 */
-  modifyHandle(obj: OBJ, modifyMode: MODIFY_MODE, data) {
-    return Observable.create((obs) => {
-      this.openDB().subscribe(db => {
-        const tx = db.transaction(obj, TX_MODE.READandWRITE);
-        const store = tx.objectStore(obj);
-        let req;
-        if (modifyMode === MODIFY_MODE.ADD) {
-          req = store.add(data);
+  delBookkeeping(key): Observable<boolean> {
+    return this.handle(OBJ.BOOKKEEPING, TX_MODE.READandWRITE, (obs, db, store) => {
+      let req = store.get(key);
+      req.onsuccess = (evt) => {
+        const record = evt.target.result;
+        if (!record) {
+          obs.next(false);
+          db.close();
+          obs.complete();
+          console.log(`[${OBJ.BOOKKEEPING}-key: ${key}] no data`);
         }
+        req = store.delete(key);
         req.onsuccess = () => {
           obs.next(true);
           db.close();
           obs.complete();
         };
-        req.onerror = (ex) => {
-          console.log(`[${obj} - req] ${modifyMode} fail`);
-          obs.next(false);
-          db.close();
-          obs.complete();
-        };
-        tx.onerror = () => console.log(`[${obj} - tx] ${modifyMode} fail`);
-      });
+      };
+      return req;
     });
   }
 
-  /** 取得obj全部資料處裡
-   * 因為 [event.target.result] 資料是指標，故特例處理
-   */
-  getAllHandle(obj: OBJ) {
+  handle(obj: OBJ, txMode: TX_MODE, func: CallableFunction) {
+    const str = `[obj: ${obj}]`;
     return Observable.create((obs) => {
       this.openDB().subscribe(db => {
-        const result = [];
-        const tx = db.transaction(obj, TX_MODE.READ);
-        const req = tx.objectStore(obj).openCursor();
-        req.onsuccess = (event) => {
-          const cursor = event.target.result;
-          if (cursor) {
-            result.push(cursor.value);
-            cursor.continue();
-          } else {
-            obs.next(result);
-            db.close();
-            obs.complete();
-          }
-        };
+        const tx = db.transaction(obj, txMode);
+        const store = tx.objectStore(obj);
+        const req = func(obs, db, store);
         req.onerror = () => {
+          obs.next(false);
           db.close();
-          console.log(`[${obj} - req] get all fail`);
+          obs.complete();
+          console.log(`${str} req fail`);
         };
-        tx.onerror = () => console.log(`[${obj} - tx] get all fail`);
+        tx.onerror = () => console.log(`${str} tx fail`);
       });
     });
   }
@@ -91,11 +94,12 @@ export class IndexedDB {
   /** 開啟資料庫
    * 若未建立則建立
    */
-  openDB() {
+  private openDB() {
     return Observable.create((obs) => {
       const req = indexedDB.open(this.dbName, environment.version);
       req.onsuccess = () => {
         obs.next(req.result);
+        this.useDatabase(req.result);
         obs.complete();
       };
       req.onerror = () => {
@@ -106,11 +110,22 @@ export class IndexedDB {
   }
 
   /** 建立資料庫結構 */
-  createDBSchema(db) {
-    const store = db.createObjectStore(OBJ.BOOKKEEPING, { autoIncrement : true });
+  private createDBSchema(db) {
+    const store = db.createObjectStore(OBJ.BOOKKEEPING, { autoIncrement: true });
     // TODO: 排序
     // https://www.w3.org/TR/IndexedDB/#key-generator-concept
     // var titleIndex = store.createIndex("by_title", "title", {unique: true});
+    this.useDatabase(db);
+  }
+
+  /** 當網頁應用程式於瀏覽器另一個分頁開啟時變更版本則關閉資料庫
+   * (參照mdn範例)
+   */
+  private useDatabase(db) {
+    db.onversionchange = () => {
+      db.close();
+      alert('A new version of this page is ready. Please reload!');
+    };
   }
 
 }
