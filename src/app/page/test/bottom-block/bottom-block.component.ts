@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatBottomSheetRef } from '@angular/material/bottom-sheet';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { IndexedDB } from 'src/app/core/sw/indexedDb';
+import { IndexedDB } from 'src/app/core/sw/IndexedDb';
 
 @Component({
   selector: 'app-bottom-block',

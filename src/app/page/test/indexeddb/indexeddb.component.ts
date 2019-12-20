@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { BottomBlockComponent } from '../bottom-block/bottom-block.component';
-import { IndexedDB } from 'src/app/core/sw/indexedDb';
+import { IndexedDB } from 'src/app/core/sw/IndexedDb';
 
 @Component({
   selector: 'app-indexeddb',
