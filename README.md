@@ -101,20 +101,20 @@
            })
        ```
   6. 修改`src/main.ts`
-  - before
-  ```ts
-  platformBrowserDynamic()
-    .bootstrapModule(AppModule)
-    .catch(err => console.error(err));
-  ```
-  - after
-  ```ts
-  document.addEventListener("DOMContentLoaded", () => {
-    platformBrowserDynamic()
-      .bootstrapModule(AppModule)
-      .catch(err => console.error(err));
-  });
-  ```
+     - before
+       ```ts
+       platformBrowserDynamic()
+         .bootstrapModule(AppModule)
+         .catch(err => console.error(err));
+       ```
+     - after
+       ```ts
+       document.addEventListener("DOMContentLoaded", () => {
+         platformBrowserDynamic()
+           .bootstrapModule(AppModule)
+           .catch(err => console.error(err));
+       });
+       ```
 - 建構
   ```
   ng run my-app:app-shell
@@ -143,31 +143,31 @@
 
 ### 2.5 IndexedDB
 
-  * DB
-    ```js
-      const req = indexedDB.open('DB_NAME', version);
-      req.onsuccess = (event) => {
-        /* req.result, event.target.result為db */
-      };
-    ```
-    * `version`必須為整數
-  * DB Schema
-    ```js
-      const req = indexedDB.open('DB_NAME', version);
-      req.onupgradeneeded = (event) => {
-        const db = event.target.result;
-        const store1 = db.createObjectStore('OBJECT_1', { autoIncrement: true });
-        const store2 = db.createObjectStore('OBJECT_2', { keyPath: 'FIELD' });
-      };
-    ```
-    * TODO: `createIndex`
-  * Transaction
-    ``` ts
-      const tx = db.transaction('OBJECT', txMode);
-      const store = tx.objectStore('OBJECT');
-      tx.onerror = () => console.log(`${str} tx fail`);
-    ```
-    * `txMode` -> 'readonly' | 'readwrite'
+- DB
+  ```js
+  const req = indexedDB.open("DB_NAME", version);
+  req.onsuccess = event => {
+    /* req.result, event.target.result為db */
+  };
+  ```
+  - `version`必須為整數
+- DB Schema
+  ```js
+  const req = indexedDB.open("DB_NAME", version);
+  req.onupgradeneeded = event => {
+    const db = event.target.result;
+    const store1 = db.createObjectStore("OBJECT_1", { autoIncrement: true });
+    const store2 = db.createObjectStore("OBJECT_2", { keyPath: "FIELD" });
+  };
+  ```
+  - TODO: `createIndex`
+- Transaction
+  ```ts
+  const tx = db.transaction("OBJECT", txMode);
+  const store = tx.objectStore("OBJECT");
+  tx.onerror = () => console.log(`${str} tx fail`);
+  ```
+  - `txMode` -> 'readonly' | 'readwrite'
 
 ## 3 筆記
 
@@ -229,3 +229,19 @@
     ```
 
   - 若已存在同名的 DB，則視 version 是否相同觸發`onupgradeneeded`
+
+### 3.6 Service Worker - SwUpdate
+
+- [Angular 官方文件](https://angular.tw/api/service-worker/SwUpdate)
+- 實例:
+  ```ts
+  export class AppModule {
+    constructor(private swUpdate: SwUpdate) {
+      if (this.swUpdate.isEnabled) {
+        this.swUpdate.available.subscribe(() => {
+          window.location.reload();
+        });
+      }
+    }
+  }
+  ```
